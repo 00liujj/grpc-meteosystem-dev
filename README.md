@@ -1,18 +1,22 @@
 # grpc-meteosystem-dev
 ===================================
 
-##WhatToDo
+## WhatToDo
     cd ./grpc-meteosystem-dev && make
 ===================================
 
-##Updates
-    List of
+## Updates
 
-###Update0
-    initial update of [README](README.md)
+List of
 
-###Update1
-    update of [async client-server](async-test) : [cервер](async-test/gull_server.cc) с двумя асинхронными сервисами принимает удаленные [вызовы](async-test/gull.proto) от асинхронных заглушек одного [клиента](async-test/gull_client.cc на получение результата вычислений и подписку на стрим с прогрессом выполнения оных
+### Update 0
 
-###update2
-    regular [README](README.md) update
+Initial update of [README](README.md)
+
+### Update 1
+
+Update of [async-client-server](async-tests) : [cервер](async-tests/gull_server.cc) с двумя асинхронными сервисами принимает удаленные [вызовы](async-tests/gull.proto) от асинхронных заглушек одного [клиента](async-tests/gull_client.cc на получение результата вычислений и подписку на стрим с прогрессом выполнения оных
+
+### Update 2
+
+Regular [README](README.md) update
