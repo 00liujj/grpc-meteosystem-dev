@@ -1,0 +1,58 @@
+[
+    {
+        "arguments": [
+            "c++", 
+            "-c", 
+            "-std=c++11", 
+            "-pthread", 
+            "-I/usr/local/include", 
+            "-o", 
+            "gull.pb.o", 
+            "gull.pb.cc"
+        ], 
+        "directory": "/home/groenendael/grpc-meteosystem-dev/async-tests", 
+        "file": "gull.pb.cc"
+    }, 
+    {
+        "arguments": [
+            "c++", 
+            "-c", 
+            "-std=c++11", 
+            "-pthread", 
+            "-I/usr/local/include", 
+            "-o", 
+            "gull.grpc.pb.o", 
+            "gull.grpc.pb.cc"
+        ], 
+        "directory": "/home/groenendael/grpc-meteosystem-dev/async-tests", 
+        "file": "gull.grpc.pb.cc"
+    }, 
+    {
+        "arguments": [
+            "c++", 
+            "-c", 
+            "-std=c++11", 
+            "-pthread", 
+            "-I/usr/local/include", 
+            "-o", 
+            "gull_server.o", 
+            "gull_server.cc"
+        ], 
+        "directory": "/home/groenendael/grpc-meteosystem-dev/async-tests", 
+        "file": "gull_server.cc"
+    }, 
+    {
+        "arguments": [
+            "c++", 
+            "-c", 
+            "-std=c++11", 
+            "-pthread", 
+            "-I/usr/local/include", 
+            "-o", 
+            "gull_client.o", 
+            "gull_client.cc"
+        ], 
+        "directory": "/home/groenendael/grpc-meteosystem-dev/async-tests", 
+        "file": "gull_client.cc"
+    }
+]
