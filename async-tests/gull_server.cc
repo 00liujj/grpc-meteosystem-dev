@@ -42,9 +42,15 @@ using gull::Data;
 
 class CallDataBase {
 public:
-  CallDataBase (){
+  CallDataBase (ServerCompletionQueue* cq) : cq_(cq), status_(CREATE) {
   }
+
   virtual void Proceed(int & counter, std::string & donejob, bool & done) = 0;
+
+  ServerCompletionQueue* cq_;
+
+  enum CallStatus { CREATE, PROCESS, FINISH, DESTROY};
+  CallStatus status_;
 };
 
 class CheckerServer final {
@@ -74,8 +80,9 @@ private:
     int stuff = 0;
     std::string stuff2 = "";
     bool stuff3 = false;
+
     CallDataProgress(Checker::AsyncService* service, ServerCompletionQueue* cq)
-        : service_(service), cq_(cq), responder_(&ctx_), status_(CREATE) {
+        : CallDataBase(cq), service_(service), responder_(&ctx_) {
         Proceed(stuff,stuff2,stuff3);
     }
 
@@ -113,16 +120,12 @@ private:
 
    private:
      Checker::AsyncService* service_;
-     ServerCompletionQueue* cq_;
      ServerContext ctx_;
 
      WorkRequest request_;
      WorkReply reply_;
 
      ServerAsyncWriter<WorkReply> responder_;
-
-     enum CallStatus { CREATE, PROCESS, FINISH, DESTROY};
-     CallStatus status_;
   };
 
   class CallDataGet : public CallDataBase {
@@ -130,29 +133,30 @@ private:
     int stuff = 0;
     std::string stuff2 = "";
     bool stuff3 = false;
+
     CallDataGet(Data::AsyncService* service, ServerCompletionQueue* cq)
-        : service2_(service), cq2_(cq), responder2_(&ctx2_), status2_(CREATE) {
+        : CallDataBase(cq), service2_(service), responder2_(&ctx2_) {
         Proceed(stuff,stuff2,stuff3);
     }
 
     void Proceed(int & counter, std::string & donejob, bool & done) {
-        if (status2_ == CREATE) {
-            status2_ = PROCESS;
-            service2_->RequestGetData(&ctx2_, &request2_, &responder2_, cq2_, cq2_, this);
-      } else if (status2_ == PROCESS) {
-            new CallDataGet(service2_, cq2_);
+        if (status_ == CREATE) {
+            status_ = PROCESS;
+            service2_->RequestGetData(&ctx2_, &request2_, &responder2_, cq_, cq_, this);
+      } else if (status_ == PROCESS) {
+            new CallDataGet(service2_, cq_);
             if (done) { 
                 reply2_.set_data(donejob);
-                status2_ = FINISH;
+                status_ = FINISH;
 	    } else {
-		status2_ = PROCESS;
+		status_ = PROCESS;	
 	    }
             responder2_.Write(reply2_,this);
-      } else if (status2_ == FINISH) {
+      } else if (status_ == FINISH) {
             responder2_.Finish(Status::OK,this);
-            status2_ = DESTROY;
+            status_ = DESTROY;
       } else {
-            GPR_ASSERT(status2_ == DESTROY);
+            GPR_ASSERT(status_ == DESTROY);
             done = false;
             delete this;
       }
@@ -160,16 +164,12 @@ private:
 
    private:
      Data::AsyncService* service2_;
-     ServerCompletionQueue* cq2_;
      ServerContext ctx2_;
 
      DataRequest request2_;
      DataReply reply2_;
 
      ServerAsyncWriter<DataReply> responder2_;
-
-     enum CallStatus { CREATE, PROCESS, FINISH, DESTROY};
-     CallStatus status2_;
   };
 
   void HandleRpcs() {

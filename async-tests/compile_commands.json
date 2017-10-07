@@ -35,11 +35,11 @@
             "-pthread", 
             "-I/usr/local/include", 
             "-o", 
-            "gull_server.o", 
-            "gull_server.cc"
+            "gull_client.o", 
+            "gull_client.cc"
         ], 
         "directory": "/home/groenendael/grpc-meteosystem-dev/async-tests", 
-        "file": "gull_server.cc"
+        "file": "gull_client.cc"
     }, 
     {
         "arguments": [
@@ -49,10 +49,10 @@
             "-pthread", 
             "-I/usr/local/include", 
             "-o", 
-            "gull_client.o", 
-            "gull_client.cc"
+            "gull_server.o", 
+            "gull_server.cc"
         ], 
         "directory": "/home/groenendael/grpc-meteosystem-dev/async-tests", 
-        "file": "gull_client.cc"
+        "file": "gull_server.cc"
     }
 ]

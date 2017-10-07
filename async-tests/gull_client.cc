@@ -43,71 +43,77 @@ public:
   CheckerClient(std::shared_ptr<Channel> channel)
       : stub_(Checker::NewStub(channel)), datastub_(Data::NewStub(channel)) {}
 
-  void CheckWorkStatus(const std::string& work) {
+  void AsyncCheckWorkStatus(const std::string& work)
+  {
       WorkRequest request;
       request.set_workname(work);
-
-      WorkReply reply;
-
-      ClientContext context;
-
-      CompletionQueue cq;
-      std::unique_ptr<ClientAsyncReader<WorkReply> > reader(
-          stub_->AsyncCheckWorkStatus(&context, request,&cq,(void*)1));
-      void* got_tag;
-      bool ok;
-
-      bool ret = cq.Next(&got_tag, &ok);
-
-      if (ret && ok && got_tag == (void*)1) {
-          while (1) {
-              reader->Read(&reply,(void*)1);
-              ok = false;
-              ret = cq.Next(&got_tag, &ok);
-              if (!ret || !ok || got_tag != (void*)1) {
-                  break;
-              }
-              std::cout << reply.workname() << " "
-                  << reply.jobstatus() << " "
-		  << reply.percent() << std::endl;
-          }
-      }
+      progress_reader = stub_->AsyncCheckWorkStatus(&context2, request,&cq,(void*)1);
   }
 
-  void GetData(const std::string& work) {
+  void AsyncGetData(const std::string& work)
+  {
       DataRequest request;
       request.set_workname(work);
 
-      DataReply reply;
+      data_reader = datastub_->AsyncGetData(&context, request,&cq,(void*)2);
+  }
 
-      ClientContext context;
-
-      CompletionQueue cq;
-      std::unique_ptr<ClientAsyncReader<DataReply> > reader(
-          datastub_->AsyncGetData(&context, request,&cq,(void*)2));
+  void GetData()
+  {
       void* got_tag;
       bool ok;
 
-      bool ret = cq.Next(&got_tag, &ok);
+      while(bool ret = cq.Next(&got_tag, &ok))
+      {
+        if (!ret)
+            break;
 
-      if (ret && ok && got_tag == (void*)2) {
-          while (1) {
-              reader->Read(&reply,(void*)2);
-              ok = false;
-              ret = cq.Next(&got_tag, &ok);
-              if (!ret || !ok || got_tag != (void*)2) {
-                  break;
-              }
+	if(got_tag == (void*)3)
+	    continue;
 
-          }
-          std::cout << work << "result: "
-              << reply.data() << std::endl;
+        if (got_tag == (void*)1) {
+            if(!ok)
+            {
+                progress_reader->Finish((Status*)&Status::OK, (void*)3);
+                continue;
+	    }
+
+            progress_reader->Read(&wreply,(void*)1);
+            std::cout << wreply.workname() << " "
+                << wreply.jobstatus() << " "
+                << wreply.percent() << std::endl;
+	}
+ 	else if (got_tag == (void*)2) {
+	    if(!ok)
+	    {
+                data_reader->Read(&dreply,(void*)4);
+                std::cout << "result: "
+                    << dreply.data() << std::endl;
+                data_reader->Finish((Status*)&Status::OK, (void*)4);
+                break;
+            }
+
+            data_reader->Read(&dreply,(void*)2);
+
+        }
       }
   }
 
 private:
   std::unique_ptr<Checker::Stub> stub_;
   std::unique_ptr<Data::Stub> datastub_;
+
+  ClientContext context;
+  ClientContext context2;
+  CompletionQueue cq;
+
+  std::unique_ptr<ClientAsyncReader<DataReply> > data_reader;
+  std::unique_ptr<ClientAsyncReader<WorkReply> > progress_reader;
+
+  WorkReply wreply;
+  DataReply dreply;
+
+
 };
 
 int main(int argc, char** argv) {
@@ -117,10 +123,11 @@ int main(int argc, char** argv) {
     std::string work(" dojob");
     std::string work2(" doanotherjob");
 
-    std::thread t1(&CheckerClient::GetData, &client, work);
-    std::thread t2(&CheckerClient::CheckWorkStatus, &client, work);
+    client.AsyncCheckWorkStatus(work);
+    client.AsyncGetData(work);
 
+    std::thread t1(&CheckerClient::GetData, &client);
     t1.join();
-    t2.join();
+
     return 0;
 }
