@@ -16,4 +16,7 @@ Update of [async-client-server](async-tests) : [cервер](async-tests/gull_se
 Update of [async-client-server](async-test) : [клиент](async-tests/gull_client.cc): разные теги на разные службы и их этапы обработки, исправленная логика ответов серверу, вынесена отдельно; [cервер](async-tests/gull_server.cc): общая очередь обработки запросов.
 
 ### Update 3
-Add [demo-files](demos) : здесь будут всякие наработки, в том числе и визуальные, подробнее - внутри.
+Add [demo-files](demos) : визуализация наработок по обрабатываемым сеткам
+
+### Update 4
+Add [demo-files](demos) : parameter-in-point grid maket

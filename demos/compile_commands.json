@@ -1,0 +1,14 @@
+[
+    {
+        "arguments": [
+            "c++", 
+            "-c", 
+            "-std=c++11", 
+            "-o", 
+            "gridmaket.o", 
+            "gridmaket.cpp"
+        ], 
+        "directory": "/home/groenendael/GitHub/grpc-meteosystem-dev/demos", 
+        "file": "gridmaket.cpp"
+    }
+]
