@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>thinned-grid.qml</file>
+        <file>lat-long-proc.obj</file>
+    </qresource>
+</RCC>

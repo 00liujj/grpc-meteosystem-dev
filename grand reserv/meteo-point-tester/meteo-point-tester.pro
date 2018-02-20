@@ -19,7 +19,7 @@ DEFINES += METEO_POINT_EXPORTS
 
 TARGET = meteo-point-tester
 CONFIG += qt
-QT += sql core
+QT += sql core widgets qml quick 3dcore 3drenderer 3dinput 3dquick quickwidgets
 
 INCLUDEPATH += 	../../../common/include \
 		../../include \
@@ -27,9 +27,11 @@ INCLUDEPATH += 	../../../common/include \
 		../../../pg/include \
 
 HEADERS +=      ../include/meteo-point.h \
+    mainwindow.h
 
 
-SOURCES +=	meteo-point-tester.cpp
+SOURCES +=	meteo-point-tester.cpp \
+    mainwindow.cpp
 			
 ODFS += meteo-point-tester.odf
 
@@ -39,3 +41,11 @@ ODFS += meteo-point-tester.odf
 #target.path = $$INSTALL_PATH/bin
 	   
 AUTHORS = dmakarov
+
+FORMS += \
+    mainwindow.ui
+
+DISTFILES +=
+
+RESOURCES += \
+    mesh.qrc

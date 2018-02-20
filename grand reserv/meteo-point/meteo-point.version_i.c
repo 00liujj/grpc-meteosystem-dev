@@ -16,9 +16,9 @@ const int executable_version_revision = 0;
 
 const char *executable_version_copyright = "АО \"РТИ\"";
 
-const char *executable_version_copyright_years = "2015-2017";
+const char *executable_version_copyright_years = "2015-2018";
 const int executable_version_coryright_start = 2015;
-const int executable_version_coryright_end = 2017;
+const int executable_version_coryright_end = 2018;
 
 const char *executable_version_literal_version = "Версия";
 

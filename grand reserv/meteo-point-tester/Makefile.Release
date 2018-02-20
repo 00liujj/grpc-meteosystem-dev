@@ -11,10 +11,10 @@ MAKEFILE      = Makefile.Release
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -DFORT_VERSION_INFO -DMETEO_POINT_EXPORTS -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_SQL_LIB -DQT_CORE_LIB -DQT_QML_DEBUG
+DEFINES       = -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -DFORT_VERSION_INFO -DMETEO_POINT_EXPORTS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_CORE_LIB -DQT_QML_DEBUG
 CFLAGS        = -m64 -pipe -O2 -D_REENTRANT -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -std=c++11 -O2 -D_REENTRANT -Wall -W -fPIC $(DEFINES)
-INCPATH       = -I. -I../../../../src/meteo-point/include -isystem /usr/include/libxml2 -I../../../../src -I../../../common/include -I../../../common/include -I../../../common/include -I../../include -I../include -I../../../pg/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I../../../../temp/meteo-point-tester/release -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I. -I../../../../src/meteo-point/include -isystem /usr/include/libxml2 -I../../../../src -I../../../common/include -I../../../common/include -I../../../common/include -I../../include -I../include -I../../../pg/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I../../../../temp/meteo-point-tester/release -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -35,7 +35,7 @@ DISTNAME      = meteo-point-tester1.2.1
 DISTDIR = /home/groenendael/Projects/meteo/temp/meteo-point-tester/release/meteo-point-tester1.2.1
 LINK          = g++
 LFLAGS        = -m64 -Wl,-O1
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lserviceskel -ldl -lmeteo-point -L../../../../release -L../../../../release/sqldrivers -L../../../../lib -lspmutils -llog -lQt5Gui -lQt5Sql -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lserviceskel -ldl -lmeteo-point -L../../../../release -L../../../../release/sqldrivers -L../../../../lib -lspmutils -llog -lQt5Widgets -lQt5Gui -lQt5Sql -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -47,12 +47,17 @@ OBJECTS_DIR   = ../../../../temp/meteo-point-tester/release/
 
 ####### Files
 
-SOURCES       = meteo-point-tester.cpp odf_meteo-point-tester.c \
-		../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp
+SOURCES       = meteo-point-tester.cpp \
+		mainwindow.cpp odf_meteo-point-tester.c \
+		../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp \
+		../../../../temp/meteo-point-tester/release/moc_mainwindow.cpp
 OBJECTS       = ../../../../temp/meteo-point-tester/release/meteo-point-tester.o \
+		../../../../temp/meteo-point-tester/release/mainwindow.o \
 		../../../../temp/meteo-point-tester/release/odf_meteo-point-tester.o \
-		../../../../temp/meteo-point-tester/release/moc_meteo-point.o
-DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
+		../../../../temp/meteo-point-tester/release/moc_meteo-point.o \
+		../../../../temp/meteo-point-tester/release/moc_mainwindow.o
+DIST          = thinned-grid.qml \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/sanitize.conf \
@@ -133,6 +138,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/moc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/opengl.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/uic.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/thread.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qml_debug.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
@@ -141,7 +147,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		meteo-point-tester.pro ../include/meteo-point.h \
-		odf_meteo-point-tester.h meteo-point-tester.cpp
+		mainwindow.h \
+		odf_meteo-point-tester.h meteo-point-tester.cpp \
+		mainwindow.cpp
 QMAKE_TARGET  = meteo-point-tester
 DESTDIR       = ../../../../release/#avoid trailing-slash linebreak
 TARGET        = ../../../../release/meteo-point-tester
@@ -169,7 +177,7 @@ first: all
 
 ####### Build rules
 
-$(TARGET):  $(OBJECTS)  
+$(TARGET): ui_mainwindow.h $(OBJECTS)  
 	@test -d ../../../../release/ || mkdir -p ../../../../release/
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
@@ -189,11 +197,12 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents meteo-point-tester.odf $(DISTDIR)/
 	$(COPY_FILE) --parents meteo-point-tester.odf $(DISTDIR)/
-	$(COPY_FILE) --parents ../include/meteo-point.h odf_meteo-point-tester.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../include/meteo-point.h odf_meteo-point-tester.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../include/meteo-point.h odf_meteo-point-tester.h $(DISTDIR)/
-	$(COPY_FILE) --parents meteo-point-tester.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents meteo-point-tester.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../include/meteo-point.h mainwindow.h odf_meteo-point-tester.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../include/meteo-point.h mainwindow.h odf_meteo-point-tester.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../include/meteo-point.h mainwindow.h odf_meteo-point-tester.h $(DISTDIR)/
+	$(COPY_FILE) --parents meteo-point-tester.cpp mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents meteo-point-tester.cpp mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -254,6 +263,7 @@ compiler_cldoxygen_make_all: ../../../../temp/meteo-point-tester/input.doxygen.c
 compiler_cldoxygen_clean:
 	-$(DEL_FILE) ../../../../temp/meteo-point-tester/input.doxygen.cl
 ../../../../temp/meteo-point-tester/input.doxygen.cl: ../include/meteo-point.h \
+		mainwindow.h \
 		odf_meteo-point-tester.h ../../../common/include/declspec.h \
 		../../../common/include/log.hpp \
 		../../../../src/common/include/log.h \
@@ -272,9 +282,9 @@ compiler_cldoxygen_clean:
 		../../../common/include/unsigned.hpp
 	printf "" > ../../../../temp/meteo-point-tester/input.doxygen
 
-compiler_hdoxygen_make_all: ../include/meteo-point.h.tmp odf_meteo-point-tester.h.tmp
+compiler_hdoxygen_make_all: ../include/meteo-point.h.tmp mainwindow.h.tmp odf_meteo-point-tester.h.tmp
 compiler_hdoxygen_clean:
-	-$(DEL_FILE) ../include/meteo-point.h.tmp odf_meteo-point-tester.h.tmp
+	-$(DEL_FILE) ../include/meteo-point.h.tmp mainwindow.h.tmp odf_meteo-point-tester.h.tmp
 ../include/meteo-point.h.tmp: ../../../common/include/declspec.h \
 		../../../common/include/log.hpp \
 		../../../../src/common/include/log.h \
@@ -297,6 +307,12 @@ compiler_hdoxygen_clean:
 		compiler_odf_h_make_all
 	python2 /home/groenendael/Projects/meteo/src/common/doxygen/printf.py "../include/meteo-point.h " ../../../../temp/meteo-point-tester/input.doxygen ".*ui_\S*\.h .*qtwinmigrate.* .*\.pb\.h"
 
+mainwindow.h.tmp: mainwindow.h \
+		../../../../temp/meteo-point-tester/input.doxygen.cl \
+		compiler_odf_make_all \
+		compiler_odf_h_make_all
+	python2 /home/groenendael/Projects/meteo/src/common/doxygen/printf.py "mainwindow.h " ../../../../temp/meteo-point-tester/input.doxygen ".*ui_\S*\.h .*qtwinmigrate.* .*\.pb\.h"
+
 odf_meteo-point-tester.h.tmp: odf_meteo-point-tester.h \
 		../../../../temp/meteo-point-tester/input.doxygen.cl \
 		compiler_odf_make_all \
@@ -305,9 +321,9 @@ odf_meteo-point-tester.h.tmp: odf_meteo-point-tester.h \
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp
+compiler_moc_header_make_all: ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp ../../../../temp/meteo-point-tester/release/moc_mainwindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp
+	-$(DEL_FILE) ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp ../../../../temp/meteo-point-tester/release/moc_mainwindow.cpp
 ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp: ../../../common/include/declspec.h \
 		../../../common/include/log.hpp \
 		../../../../src/common/include/log.h \
@@ -325,12 +341,16 @@ compiler_moc_header_clean:
 		../../../common/include/limits.hpp \
 		../../../common/include/unsigned.hpp \
 		../include/meteo-point.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/meteo-point-tester -I/home/groenendael/Projects/meteo/src/meteo-point/include -I/usr/include/libxml2 -I/home/groenendael/Projects/meteo/src -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/meteo/include -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/include -I/home/groenendael/Projects/meteo/src/pg/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../include/meteo-point.h -o ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/meteo-point-tester -I/home/groenendael/Projects/meteo/src/meteo-point/include -I/usr/include/libxml2 -I/home/groenendael/Projects/meteo/src -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/meteo/include -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/include -I/home/groenendael/Projects/meteo/src/pg/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../include/meteo-point.h -o ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp
+
+../../../../temp/meteo-point-tester/release/moc_mainwindow.cpp: mainwindow.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/meteo-point-tester -I/home/groenendael/Projects/meteo/src/meteo-point/include -I/usr/include/libxml2 -I/home/groenendael/Projects/meteo/src -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/meteo/include -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/include -I/home/groenendael/Projects/meteo/src/pg/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o ../../../../temp/meteo-point-tester/release/moc_mainwindow.cpp
 
 compiler_sdoxygen_make_all: ../../../../temp/meteo-point-tester/input.doxygen
 compiler_sdoxygen_clean:
 	-$(DEL_FILE) ../../../../temp/meteo-point-tester/input.doxygen
-../../../../temp/meteo-point-tester/input.doxygen: meteo-point-tester.cpp compiler_hdoxygen_make_all \
+../../../../temp/meteo-point-tester/input.doxygen: meteo-point-tester.cpp \
+		mainwindow.cpp compiler_hdoxygen_make_all \
 		../../../common/include/log.h \
 		../../../common/include/declspec.h \
 		../../../common/include/protconst.h \
@@ -349,7 +369,10 @@ compiler_sdoxygen_clean:
 		../../../common/include/coord.hpp \
 		../../../common/include/limits.hpp \
 		../../../common/include/unsigned.hpp \
-		../../../../temp/meteo-point-tester/release/meteo-point-tester.moc
+		mainwindow.h \
+		../../../../temp/meteo-point-tester/release/meteo-point-tester.moc \
+		mainwindow.h \
+		ui_mainwindow.h
 	python2 /home/groenendael/Projects/meteo/src/common/doxygen/printf.py "$(SOURCES) " ../../../../temp/meteo-point-tester/input.doxygen ".*moc_\S*\.cpp .*qrc_\S*\.cpp .*qtwinmigrate.* .*\.pb\.cc"
 
 compiler_moc_source_make_all: ../../../../temp/meteo-point-tester/release/meteo-point-tester.moc
@@ -373,8 +396,15 @@ compiler_moc_source_clean:
 		../../../common/include/coord.hpp \
 		../../../common/include/limits.hpp \
 		../../../common/include/unsigned.hpp \
+		mainwindow.h \
 		meteo-point-tester.cpp
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/meteo-point-tester -I/home/groenendael/Projects/meteo/src/meteo-point/include -I/usr/include/libxml2 -I/home/groenendael/Projects/meteo/src -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/meteo/include -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/include -I/home/groenendael/Projects/meteo/src/pg/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include meteo-point-tester.cpp -o ../../../../temp/meteo-point-tester/release/meteo-point-tester.moc
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/meteo-point-tester -I/home/groenendael/Projects/meteo/src/meteo-point/include -I/usr/include/libxml2 -I/home/groenendael/Projects/meteo/src -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/common/include -I/home/groenendael/Projects/meteo/src/meteo/include -I/home/groenendael/Projects/meteo/src/meteo/meteo-point/include -I/home/groenendael/Projects/meteo/src/pg/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include meteo-point-tester.cpp -o ../../../../temp/meteo-point-tester/release/meteo-point-tester.moc
+
+compiler_uic_make_all: ui_mainwindow.h
+compiler_uic_clean:
+	-$(DEL_FILE) ui_mainwindow.h
+ui_mainwindow.h: mainwindow.ui
+	/usr/lib/x86_64-linux-gnu/qt5/bin/uic mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -382,7 +412,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_odf_clean compiler_odf_h_clean compiler_cldoxygen_clean compiler_hdoxygen_clean compiler_moc_header_clean compiler_sdoxygen_clean compiler_moc_source_clean 
+compiler_clean: compiler_odf_clean compiler_odf_h_clean compiler_cldoxygen_clean compiler_hdoxygen_clean compiler_moc_header_clean compiler_sdoxygen_clean compiler_moc_source_clean compiler_uic_clean 
 
 ####### Compile
 
@@ -404,14 +434,22 @@ compiler_clean: compiler_odf_clean compiler_odf_h_clean compiler_cldoxygen_clean
 		../../../common/include/coord.hpp \
 		../../../common/include/limits.hpp \
 		../../../common/include/unsigned.hpp \
+		mainwindow.h \
 		../../../../temp/meteo-point-tester/release/meteo-point-tester.moc
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../../temp/meteo-point-tester/release/meteo-point-tester.o meteo-point-tester.cpp
+
+../../../../temp/meteo-point-tester/release/mainwindow.o: mainwindow.cpp mainwindow.h \
+		ui_mainwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../../temp/meteo-point-tester/release/mainwindow.o mainwindow.cpp
 
 ../../../../temp/meteo-point-tester/release/odf_meteo-point-tester.o: odf_meteo-point-tester.c 
 	$(CC) -c $(CFLAGS) $(INCPATH) -o ../../../../temp/meteo-point-tester/release/odf_meteo-point-tester.o odf_meteo-point-tester.c
 
 ../../../../temp/meteo-point-tester/release/moc_meteo-point.o: ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../../temp/meteo-point-tester/release/moc_meteo-point.o ../../../../temp/meteo-point-tester/release/moc_meteo-point.cpp
+
+../../../../temp/meteo-point-tester/release/moc_mainwindow.o: ../../../../temp/meteo-point-tester/release/moc_mainwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../../temp/meteo-point-tester/release/moc_mainwindow.o ../../../../temp/meteo-point-tester/release/moc_mainwindow.cpp
 
 ####### Install
 

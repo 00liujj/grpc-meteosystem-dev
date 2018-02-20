@@ -4,16 +4,19 @@
 #include "log.h"
 #include "odf_meteo-point-tester.h"
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QTextCodec>
 #include "meteo-point.h"
 #include <locale.h>
 #include "assert.h"
 
+#include <string>
+#include "mainwindow.h"
+
 #include <iostream>
 #include <QObject>
 
-class Tester : public QObject
+class Tester : public MainWindow
 {
     Q_OBJECT
 
@@ -29,11 +32,6 @@ public:
         is_ok = connect(meteopoint, SIGNAL(meteoPointCalculated()), SLOT(onMeteoPointCalculated())); assert(is_ok);
         is_ok = connect(meteopoint, SIGNAL(gribAllDataReloaded()), SLOT(onAllGribDataReloaded())); assert(is_ok);
 
-        QDate d1(2016, 2, 7);
-        std::cout << "check point from tester" << std::endl;
-        std::getchar();
-        meteopoint->checkMeteoPoint(d1, 12, 80, 80, 11);
-
     }
 
 public slots:
@@ -48,8 +46,18 @@ public slots:
     {
         std::cout << "get point from tester" << std::endl;
         meteo_point = meteopoint->getMeteoPoint();
-        std::cout << meteo_point.get()->at(3) - 273 << " is temperature in POINT!" << std::endl;
+        std::cout << "got it" << std::endl;
+        QString out = QString::number(meteo_point.get()->at(3) - 273)
+                + " is " + QString::fromStdString(getParam()) + " in POINT!\n";
+        setOutput(out);
 
+    }
+
+    void on_pushButton_clicked()
+    {
+        QDate d1(2016, 2, 7);
+        std::cout << "check point from tester" << std::endl;
+        meteopoint->checkMeteoPoint(d1, 12, getLon(), getLat(), Parameters.at(getParam())); // d1 and 12 - from tables!
     }
 
 signals:
@@ -59,7 +67,10 @@ private:
 
     std::shared_ptr<grib_all_data_t > meteo_grib_data_all;
     std::shared_ptr<meteo_point_t> meteo_point;
+
+    std::map<std::string, int> Parameters = {{"Temperature", 11}};
 };
+
 
 /// Системное имя службы
 const char* SERVICE_NAME = "meteo/meteo-point-tester";
@@ -82,12 +93,13 @@ int32_t main(int argc, char* argv[], bool /*fAppMode*/, logHandle log)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("utf-8"));
 #endif
 
-    QCoreApplication app(argc, argv);
+    QApplication app(argc, argv);
     int result;
     try
     {
         std::cout << "hi" << std::endl;
         tester = new Tester(log);
+        tester->show();
     }
     catch (std::bad_alloc&)
     {
